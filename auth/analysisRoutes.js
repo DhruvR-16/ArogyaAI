@@ -4,7 +4,7 @@ import { protect } from './authMiddleware.js';
 
 const router = express.Router();
 
-// 🔹 START ANALYSIS
+
 router.post('/analyze', protect, async (req, res) => {
   try {
     const { upload_id } = req.body;
@@ -13,7 +13,7 @@ router.post('/analyze', protect, async (req, res) => {
       return res.status(400).json({ error: 'Upload ID is required' });
     }
 
-    // Verify upload belongs to user
+
     const uploadCheck = await pool.query(
       'SELECT * FROM uploads WHERE id = $1 AND user_id = $2',
       [upload_id, req.user.id]
@@ -23,7 +23,7 @@ router.post('/analyze', protect, async (req, res) => {
       return res.status(404).json({ error: 'Upload not found' });
     }
 
-    // Create analysis record
+
     const analysisResult = await pool.query(
       `INSERT INTO analyses (user_id, upload_id, status, created_at)
        VALUES ($1, $2, $3, NOW())
@@ -31,13 +31,13 @@ router.post('/analyze', protect, async (req, res) => {
       [req.user.id, upload_id, 'processing']
     );
 
-    // Update upload status
+
     await pool.query(
       'UPDATE uploads SET status = $1 WHERE id = $2',
       ['analyzing', upload_id]
     );
 
-    // Simulate ML analysis (replace with actual ML model integration)
+
     setTimeout(async () => {
       const predictions = {
         diseases: [
@@ -74,7 +74,7 @@ router.post('/analyze', protect, async (req, res) => {
   }
 });
 
-// 🔹 GET ANALYSIS STATISTICS (must come before /:id)
+
 router.get('/stats', protect, async (req, res) => {
   try {
     const stats = await pool.query(
@@ -95,7 +95,7 @@ router.get('/stats', protect, async (req, res) => {
   }
 });
 
-// 🔹 GET ANALYSIS RESULTS
+
 router.get('/', protect, async (req, res) => {
   try {
     const result = await pool.query(
@@ -114,7 +114,7 @@ router.get('/', protect, async (req, res) => {
   }
 });
 
-// 🔹 GET SINGLE ANALYSIS
+
 router.get('/:id', protect, async (req, res) => {
   try {
     const result = await pool.query(

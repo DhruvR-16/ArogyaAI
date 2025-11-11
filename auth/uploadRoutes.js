@@ -11,7 +11,7 @@ const __dirname = path.dirname(__filename);
 
 const router = express.Router();
 
-// Configure multer for file uploads
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadDir = path.join(__dirname, '../uploads');
@@ -28,7 +28,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  limits: { fileSize: 10 * 1024 * 1024 }, 
   fileFilter: (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|pdf|doc|docx|dicom/;
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
@@ -42,7 +42,7 @@ const upload = multer({
   }
 });
 
-// 🔹 UPLOAD FILE
+
 router.post('/upload', protect, upload.single('file'), async (req, res) => {
   try {
     if (!req.file) {
@@ -77,7 +77,7 @@ router.post('/upload', protect, upload.single('file'), async (req, res) => {
   }
 });
 
-// 🔹 GET USER UPLOADS
+
 router.get('/', protect, async (req, res) => {
   try {
     const result = await pool.query(
@@ -95,7 +95,6 @@ router.get('/', protect, async (req, res) => {
   }
 });
 
-// 🔹 GET SINGLE UPLOAD
 router.get('/:id', protect, async (req, res) => {
   try {
     const result = await pool.query(
@@ -114,7 +113,7 @@ router.get('/:id', protect, async (req, res) => {
   }
 });
 
-// 🔹 DELETE UPLOAD
+
 router.delete('/:id', protect, async (req, res) => {
   try {
     const result = await pool.query(
@@ -126,13 +125,13 @@ router.delete('/:id', protect, async (req, res) => {
       return res.status(404).json({ error: 'Upload not found' });
     }
 
-    // Delete file from filesystem
+
     const filePath = result.rows[0].file_path;
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
 
-    // Delete from database
+
     await pool.query('DELETE FROM uploads WHERE id = $1 AND user_id = $2', [
       req.params.id,
       req.user.id

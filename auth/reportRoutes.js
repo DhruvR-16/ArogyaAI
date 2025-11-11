@@ -4,7 +4,7 @@ import { protect } from './authMiddleware.js';
 
 const router = express.Router();
 
-// 🔹 GENERATE REPORT
+
 router.post('/reports', protect, async (req, res) => {
   try {
     const { analysis_id, report_type } = req.body;
@@ -13,7 +13,7 @@ router.post('/reports', protect, async (req, res) => {
       return res.status(400).json({ error: 'Analysis ID is required' });
     }
 
-    // Verify analysis belongs to user
+
     const analysisCheck = await pool.query(
       `SELECT a.*, u.original_filename
        FROM analyses a
@@ -32,7 +32,7 @@ router.post('/reports', protect, async (req, res) => {
       return res.status(400).json({ error: 'Analysis not completed yet' });
     }
 
-    // Generate report
+
     const reportData = {
       analysis_id: analysis.id,
       filename: analysis.original_filename,
@@ -64,7 +64,7 @@ router.post('/reports', protect, async (req, res) => {
   }
 });
 
-// 🔹 GET USER REPORTS
+
 router.get('/', protect, async (req, res) => {
   try {
     const result = await pool.query(
@@ -84,7 +84,7 @@ router.get('/', protect, async (req, res) => {
   }
 });
 
-// 🔹 GET SINGLE REPORT
+
 router.get('/:id', protect, async (req, res) => {
   try {
     const result = await pool.query(
@@ -107,7 +107,7 @@ router.get('/:id', protect, async (req, res) => {
   }
 });
 
-// 🔹 DELETE REPORT
+
 router.delete('/:id', protect, async (req, res) => {
   try {
     const result = await pool.query(
@@ -125,6 +125,5 @@ router.delete('/:id', protect, async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
-
 export default router;
 
