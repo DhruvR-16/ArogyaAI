@@ -47,32 +47,8 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" className="py-20 px-4 bg-white">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-10 text-gray-900">
-            Key Features
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <FeatureCard
-              title="Early Detection"
-              description="Identify potential health issues before they become serious problems"
-            />
-            <FeatureCard
-              title="AI-Powered Analysis"
-              description="Advanced machine learning algorithms for accurate predictions"
-            />
-            <FeatureCard
-              title="Health Insights"
-              description="Comprehensive health reports and personalized recommendations"
-            />
-            <FeatureCard
-              title="Secure & Private"
-              description="Your health data is encrypted and kept completely confidential"
-            />
-          </div>
-        </div>
-      </section>
+
+
 
       {showLogin && (
         <LoginModal
