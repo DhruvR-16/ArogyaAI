@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-const API_BASE_URL = 'http://localhost:5050/api';
+import { API_BASE_URL } from '../config/api';
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem('token');
@@ -14,7 +13,7 @@ export const analysisService = {
 
   startAnalysis: async (uploadId) => {
     const response = await axios.post(
-      `${API_BASE_URL}/analysis/analyze`,
+      `${API_BASE_URL}/api/analysis/analyze`,
       { upload_id: uploadId },
       { headers: getAuthHeaders() }
     );
@@ -24,7 +23,7 @@ export const analysisService = {
 
   getAnalyses: async () => {
     const response = await axios.get(
-      `${API_BASE_URL}/analysis/`,
+      `${API_BASE_URL}/api/analysis/`,
       { headers: getAuthHeaders() }
     );
     return response.data;
@@ -33,7 +32,7 @@ export const analysisService = {
 
   getAnalysis: async (id) => {
     const response = await axios.get(
-      `${API_BASE_URL}/analysis/${id}`,
+      `${API_BASE_URL}/api/analysis/${id}`,
       { headers: getAuthHeaders() }
     );
     return response.data;
@@ -42,7 +41,7 @@ export const analysisService = {
 
   getStats: async () => {
     const response = await axios.get(
-      `${API_BASE_URL}/analysis/stats`,
+      `${API_BASE_URL}/api/analysis/stats`,
       { headers: getAuthHeaders() }
     );
     return response.data;

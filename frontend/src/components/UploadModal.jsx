@@ -104,3 +104,4 @@ const UploadModal = ({ onClose, onSubmit, mode = 'new_case', defaultDisease = ''
 export default UploadModal
 
 
+

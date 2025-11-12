@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-const API_BASE_URL = 'http://localhost:5050/api';
+import { API_BASE_URL } from '../config/api';
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem('token');
@@ -14,7 +13,7 @@ export const reportService = {
 
   generateReport: async (analysisId, reportType = 'summary') => {
     const response = await axios.post(
-      `${API_BASE_URL}/reports/`,
+      `${API_BASE_URL}/api/reports/`,
       { analysis_id: analysisId, report_type: reportType },
       { headers: getAuthHeaders() }
     );
@@ -24,7 +23,7 @@ export const reportService = {
 
   getReports: async () => {
     const response = await axios.get(
-      `${API_BASE_URL}/reports/`,
+      `${API_BASE_URL}/api/reports/`,
       { headers: getAuthHeaders() }
     );
     return response.data;
@@ -33,7 +32,7 @@ export const reportService = {
 
   getReport: async (id) => {
     const response = await axios.get(
-      `${API_BASE_URL}/reports/${id}`,
+      `${API_BASE_URL}/api/reports/${id}`,
       { headers: getAuthHeaders() }
     );
     return response.data;
@@ -42,7 +41,7 @@ export const reportService = {
 
   deleteReport: async (id) => {
     const response = await axios.delete(
-      `${API_BASE_URL}/reports/${id}`,
+      `${API_BASE_URL}/api/reports/${id}`,
       { headers: getAuthHeaders() }
     );
     return response.data;

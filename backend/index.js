@@ -10,15 +10,39 @@ dotenv.config();
 const app = express();
 
 
+// Get allowed origins from environment variable or use defaults for development
+const getAllowedOrigins = () => {
+  const allowedOrigins = process.env.ALLOWED_ORIGINS 
+    ? process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
+    : ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:3000'];
+  
+  return allowedOrigins;
+};
+
 const corsOptions = {
   origin: function (origin, callback) {
-    if (!origin || origin.includes('localhost:3000') || origin.includes('127.0.0.1:3000') || origin.includes('localhost:5173')) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) {
+      return callback(null, true);
+    }
+    
+    const allowedOrigins = getAllowedOrigins();
+    
+    // Check if origin is in allowed list
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      // In development, allow localhost origins
+      if (process.env.NODE_ENV !== 'production' && 
+          (origin.includes('localhost') || origin.includes('127.0.0.1'))) {
+        callback(null, true);
+      } else {
+        console.log('CORS blocked origin:', origin);
+        callback(new Error('Not allowed by CORS'));
+      }
     }
   },
-  credentials: false,
+  credentials: true, // Enable credentials for cookies/auth headers
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   optionsSuccessStatus: 200

@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: arogyaai-backend
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5050
+      # Add your environment variables in Render dashboard:
+      # - DATABASE_URL (your Supabase connection string)
+      # - JWT_SECRET (your JWT secret)
+      # - ALLOWED_ORIGINS (your Vercel frontend URL, e.g., https://your-app.vercel.app)
+

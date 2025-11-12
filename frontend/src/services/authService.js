@@ -1,13 +1,13 @@
 import axios from 'axios'
-
-const API_BASE_URL = 'http://localhost:5050/api/auth'
+import { API_AUTH_URL } from '../config/api'
 
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: API_AUTH_URL,
   headers: {
     'Content-Type': 'application/json',
   },
   timeout: 10000,
+  withCredentials: false, // Set to false for Bearer token auth
 })
 
 
@@ -42,7 +42,7 @@ api.interceptors.response.use(
       throw new Error(errorMessage)
     } else if (error.request) {
 
-      throw new Error('Network error. Please check if the server is running on http://localhost:5000')
+      throw new Error('Network error. Please check if the server is running.')
     } else {
 
       throw new Error(error.message || 'An unexpected error occurred')

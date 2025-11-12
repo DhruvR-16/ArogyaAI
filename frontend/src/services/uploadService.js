@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-const API_BASE_URL = 'http://localhost:5050/api';
+import { API_BASE_URL } from '../config/api';
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem('token');
@@ -20,7 +19,7 @@ export const uploadService = {
     const token = localStorage.getItem('token');
     
     const response = await axios.post(
-      `${API_BASE_URL}/upload/upload`,
+      `${API_BASE_URL}/api/upload/upload`,
       formData,
       {
         headers: {
@@ -35,7 +34,7 @@ export const uploadService = {
 
   getUserUploads: async () => {
     const response = await axios.get(
-      `${API_BASE_URL}/upload/`,
+      `${API_BASE_URL}/api/upload/`,
       { headers: getAuthHeaders() }
     );
     return response.data;
@@ -44,7 +43,7 @@ export const uploadService = {
 
   getUpload: async (id) => {
     const response = await axios.get(
-      `${API_BASE_URL}/upload/${id}`,
+      `${API_BASE_URL}/api/upload/${id}`,
       { headers: getAuthHeaders() }
     );
     return response.data;
@@ -53,7 +52,7 @@ export const uploadService = {
 
   deleteUpload: async (id) => {
     const response = await axios.delete(
-      `${API_BASE_URL}/upload/${id}`,
+      `${API_BASE_URL}/api/upload/${id}`,
       { headers: getAuthHeaders() }
     );
     return response.data;
