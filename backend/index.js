@@ -10,7 +10,7 @@ dotenv.config();
 const app = express();
 
 
-// Get allowed origins from environment variable or use defaults for development
+
 const getAllowedOrigins = () => {
   const allowedOrigins = process.env.ALLOWED_ORIGINS 
     ? process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
@@ -21,23 +21,23 @@ const getAllowedOrigins = () => {
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
+
     if (!origin) {
       return callback(null, true);
     }
     
     const allowedOrigins = getAllowedOrigins();
     
-    // Check if origin is in allowed list
+
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      // In development, allow localhost origins
+
       if (process.env.NODE_ENV !== 'production' && 
           (origin.includes('localhost') || origin.includes('127.0.0.1'))) {
         callback(null, true);
       } 
-      // In production, allow Vercel domains automatically
+
       else if (process.env.NODE_ENV === 'production' && origin.includes('.vercel.app')) {
         console.log('Allowing Vercel origin:', origin);
         callback(null, true);
@@ -48,7 +48,7 @@ const corsOptions = {
       }
     }
   },
-  credentials: true, // Enable credentials for cookies/auth headers
+  credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   optionsSuccessStatus: 200
