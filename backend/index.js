@@ -36,8 +36,14 @@ const corsOptions = {
       if (process.env.NODE_ENV !== 'production' && 
           (origin.includes('localhost') || origin.includes('127.0.0.1'))) {
         callback(null, true);
+      } 
+      // In production, allow Vercel domains automatically
+      else if (process.env.NODE_ENV === 'production' && origin.includes('.vercel.app')) {
+        console.log('Allowing Vercel origin:', origin);
+        callback(null, true);
       } else {
         console.log('CORS blocked origin:', origin);
+        console.log('Allowed origins:', allowedOrigins);
         callback(new Error('Not allowed by CORS'));
       }
     }
