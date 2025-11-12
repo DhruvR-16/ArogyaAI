@@ -76,7 +76,7 @@ const Analysis = () => {
           </p>
         </div>
 
-        {/* Statistics */}
+
         {stats && (
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
             <div className="bg-white rounded-lg shadow-sm p-6">
@@ -129,7 +129,7 @@ const Analysis = () => {
           </div>
         </div>
 
-        {/* Analysis History */}
+        
         <div className="bg-white rounded-xl shadow-sm p-6">
           <h2 className="text-xl font-bold text-gray-800 mb-4">Analysis History</h2>
           {analyses.length === 0 ? (
