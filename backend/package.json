@@ -1,7 +1,7 @@
 {
     "name": "arogyaai-auth",
     "version": "1.0.0",
-    "description": "ArogyaAI backend for authentication using Supabase PostgreSQL and JWT",
+    "description": "ArogyaAI backend for authentication using JWT",
     "main": "index.js",
     "type": "module",
     "scripts": {
