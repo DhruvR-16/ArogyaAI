@@ -89,7 +89,7 @@ const Reports = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
+          {/* Reports List */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-xl shadow-sm p-6">
               <h2 className="text-xl font-bold text-gray-800 mb-4">Your Reports</h2>
@@ -124,7 +124,7 @@ const Reports = () => {
             </div>
           </div>
 
-
+          {/* Report Details */}
           <div className="lg:col-span-2">
             {selectedReport ? (
               <div className="bg-white rounded-xl shadow-sm p-6">

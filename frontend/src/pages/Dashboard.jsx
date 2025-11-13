@@ -45,6 +45,29 @@ const Dashboard = () => {
           </h1>
           <p className="text-gray-600">Your health analysis dashboard</p>
         </div>
+
+
+        <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
+          <h2 className="text-xl font-bold text-gray-800 mb-4">Your Statistics</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="p-4 bg-blue-50 rounded-lg">
+              <p className="text-sm text-gray-600 mb-1">Total Analyses</p>
+              <p className="text-2xl font-bold text-blue-600">{stats?.total_analyses || 0}</p>
+            </div>
+            <div className="p-4 bg-green-50 rounded-lg">
+              <p className="text-sm text-gray-600 mb-1">Analyses Completed</p>
+              <p className="text-2xl font-bold text-green-600">{stats?.completed || 0}</p>
+            </div>
+            <div className="p-4 bg-purple-50 rounded-lg">
+              <p className="text-sm text-gray-600 mb-1">In Progress</p>
+              <p className="text-2xl font-bold text-purple-600">{stats?.processing || 0}</p>
+            </div>
+            <div className="p-4 bg-amber-50 rounded-lg">
+              <p className="text-sm text-gray-600 mb-1">Completion Rate</p>
+              <p className="text-2xl font-bold text-amber-600">{completionRate}%</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )
