@@ -1,6 +1,10 @@
-// db.js
 import 'dotenv/config';
 import pkg from 'pg';
+
+// Fix: Allow self-signed certificates for Supabase on Render
+if (process.env.NODE_ENV === 'production') {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+}
 const { Pool } = pkg;
 
 const connectionString = process.env.DATABASE_URL || '';

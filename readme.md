@@ -41,7 +41,10 @@ ArogyaAI is an AI-powered health assistant that helps users detect potential dis
 
 ### Built for users — simple, secure, and accessible healthcare with AI.
 
+---
+Frontend URL: https://arogya-ai-nu.vercel.app/
 
+Backend URL: https://arogyaai-gj3m.onrender.com
 
 
 
