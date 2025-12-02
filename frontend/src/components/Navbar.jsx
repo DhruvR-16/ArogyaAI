@@ -68,7 +68,6 @@ const Navbar = () => {
               {isAuthenticated && (
                 <div className="flex items-center gap-2">
                   <NavLink to="/">Home</NavLink>
-                  <NavLink to="/dashboard">Dashboard</NavLink>
                   <NavLink to="/analysis">Analysis</NavLink>
                   <NavLink to="/reports">Reports</NavLink>
                 </div>

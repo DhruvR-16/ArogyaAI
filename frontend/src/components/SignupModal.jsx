@@ -128,6 +128,3 @@ const SignupModal = ({ onClose, onSwitchToLogin }) => {
 }
 
 export default SignupModal
-
-
-

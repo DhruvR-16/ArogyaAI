@@ -17,4 +17,3 @@ export const API_ANALYSIS_URL = `${API_BASE_URL}/api/analysis`;
 export const API_REPORTS_URL = `${API_BASE_URL}/api/reports`;
 
 console.log('API Base URL:', API_BASE_URL);
-

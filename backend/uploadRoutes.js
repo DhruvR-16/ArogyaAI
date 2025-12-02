@@ -1,7 +1,7 @@
 import express from 'express';
 import multer from 'multer';
 import path from 'path';
-import { pool } from './db.js';
+import pool from './db.js';
 import { protect } from './authMiddleware.js';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
@@ -145,4 +145,3 @@ router.delete('/:id', protect, async (req, res) => {
 });
 
 export default router;
-

@@ -1,13 +1,4 @@
-import axios from 'axios';
-import { API_BASE_URL } from '../config/api';
-
-const getAuthHeaders = () => {
-  const token = localStorage.getItem('token');
-  return {
-    'Authorization': `Bearer ${token}`,
-    'Content-Type': 'application/json'
-  };
-};
+import api from './api';
 
 export const uploadService = {
   uploadFile: async (file, fileType, description) => {
@@ -16,45 +7,26 @@ export const uploadService = {
     if (fileType) formData.append('fileType', fileType);
     if (description) formData.append('description', description);
 
-    const token = localStorage.getItem('token');
-    
-    const response = await axios.post(
-      `${API_BASE_URL}/api/upload/upload`,
-      formData,
-      {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data'
-        }
+    const response = await api.post('/api/upload/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
       }
-    );
+    });
     return response.data;
   },
-
 
   getUserUploads: async () => {
-    const response = await axios.get(
-      `${API_BASE_URL}/api/upload/`,
-      { headers: getAuthHeaders() }
-    );
+    const response = await api.get('/api/upload/');
     return response.data;
   },
-
 
   getUpload: async (id) => {
-    const response = await axios.get(
-      `${API_BASE_URL}/api/upload/${id}`,
-      { headers: getAuthHeaders() }
-    );
+    const response = await api.get(`/api/upload/${id}`);
     return response.data;
   },
 
-
   deleteUpload: async (id) => {
-    const response = await axios.delete(
-      `${API_BASE_URL}/api/upload/${id}`,
-      { headers: getAuthHeaders() }
-    );
+    const response = await api.delete(`/api/upload/${id}`);
     return response.data;
   }
 };
