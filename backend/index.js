@@ -12,28 +12,28 @@ dotenv.config();
 
 const app = express();
 
-// Middleware
+
 app.use(cors());
 app.use(express.json());
 
-// Logging Middleware
+
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
   next();
 });
 
-// Routes
+
 app.get('/', (req, res) => {
   res.send('ArogyaAI Backend API is running...');
 });
 
-// API Routes
+
 app.use('/api/auth', authRoutes); 
 app.use('/api/predict', predictRoutes);
 app.use('/api/reports', reportRoutes);
-app.use('/api', uploadRoutes); // /api/upload-report
+app.use('/api', uploadRoutes); 
 
-// Error Handling Middleware
+
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Something went wrong!' });
@@ -41,6 +41,6 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5050;
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0',() => {
   console.log(`Server running on port ${PORT}`);
 });

@@ -12,7 +12,7 @@ const app = express();
 const getAllowedOrigins = () => {
   const allowedOrigins = process.env.ALLOWED_ORIGINS 
     ? process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
-    : ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:3000' ,'http://10.7.3.194:3000'];
+    : ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:3000' ,'http://10.7.3.194:3000',localIP];
   
   return allowedOrigins;
 };
