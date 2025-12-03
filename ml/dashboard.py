@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 import json
 
-# Configuration
+
 API_URL = "http://localhost:8000"
 
 st.set_page_config(page_title="ArogyaAI Dashboard", layout="wide")
@@ -10,7 +10,7 @@ st.set_page_config(page_title="ArogyaAI Dashboard", layout="wide")
 st.title("ArogyaAI - Early Disease Detection System")
 st.markdown("### ML Subsystem Test Dashboard")
 
-# Sidebar for Navigation
+
 disease_choice = st.sidebar.selectbox("Select Disease Model", ["Diabetes", "Heart Disease", "Kidney Disease"])
 
 if disease_choice == "Diabetes":

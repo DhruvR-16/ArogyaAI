@@ -17,24 +17,20 @@ from sklearn.impute import SimpleImputer
 def train():
     print("Training Kidney Disease Model...")
     
-    # Load Data
+
     data_path = os.path.join(os.path.dirname(__file__), '../data/kidney_disease.csv')
     df = load_data(data_path)
     
-    # Clean Target
-    # 'ckd\t' -> 'ckd'
+
+
     df['classification'] = df['classification'].astype(str).apply(lambda x: x.strip())
     df['classification'] = df['classification'].replace('ckd\t', 'ckd')
     
-    # Map Target: ckd=1, notckd=0
+
     df['classification'] = df['classification'].map({'ckd': 1, 'notckd': 0})
     
-    # Drop rows where target is NaN (if any after mapping)
+
     df = df.dropna(subset=['classification'])
-    
-    # Select usable numeric columns
-    # 'age', 'bp', 'bgr', 'bu', 'sc', 'hemo', 'pcv', 'wc', 'rc'
-    # Some of these are object type in raw csv due to missing values, need to force numeric
     feature_cols = ['age', 'bp', 'bgr', 'bu', 'sc', 'hemo', 'pcv', 'wc', 'rc']
     
     for col in feature_cols:
@@ -43,26 +39,22 @@ def train():
     X = df[feature_cols]
     y = df['classification']
     
-    # Impute missing values
+
     imputer = SimpleImputer(strategy='mean')
     X_imputed = imputer.fit_transform(X)
     
-    # Split
+
     X_train, X_test, y_train, y_test = train_test_split(X_imputed, y, test_size=0.2, random_state=42)
     
-    # Scale
     X_train_scaled, X_test_scaled, scaler = scale_features(X_train, X_test)
-    
-    # Train
+
     model = RandomForestClassifier(n_estimators=100, random_state=42)
     model.fit(X_train_scaled, y_train)
-    
-    # Evaluate
+
     y_pred = model.predict(X_test_scaled)
     y_prob = model.predict_proba(X_test_scaled)[:, 1]
     evaluate_model(y_test, y_pred, y_prob)
-    
-    # Save Model, Scaler and Imputer
+
     models_dir = os.path.join(os.path.dirname(__file__), '../models')
     os.makedirs(models_dir, exist_ok=True)
     
@@ -70,7 +62,6 @@ def train():
     joblib.dump(scaler, os.path.join(models_dir, 'kidney_scaler.joblib'))
     joblib.dump(imputer, os.path.join(models_dir, 'kidney_imputer.joblib'))
     
-    # Save Metadata
     metadata = {
         'features': feature_cols,
         'target_classes': ['Not CKD', 'CKD']
