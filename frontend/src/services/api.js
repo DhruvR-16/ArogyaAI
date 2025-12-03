@@ -62,4 +62,9 @@ export const deleteReport = async (id) => {
   return response.data;
 };
 
+export const getUploadedReports = async () => {
+  const response = await api.get('/api/uploaded-reports');
+  return response.data;
+};
+
 export default api;

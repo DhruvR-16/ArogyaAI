@@ -2,15 +2,17 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
 import { useEffect, useState } from 'react'
-import { getReports, uploadReport, deleteReport } from '../services/api'
+import { getReports, uploadReport, deleteReport, getUploadedReports } from '../services/api'
 
 const Reports = () => {
   const navigate = useNavigate()
   const { isAuthenticated } = useAuth()
   const [reports, setReports] = useState([])
+  const [filteredReports, setFilteredReports] = useState([])
   const [selectedReport, setSelectedReport] = useState(null)
   const [uploading, setUploading] = useState(false)
   const [uploadStatus, setUploadStatus] = useState('')
+  const [filter, setFilter] = useState('all')
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -20,11 +22,44 @@ const Reports = () => {
     }
   }, [isAuthenticated, navigate])
 
+  useEffect(() => {
+    if (filter === 'all') {
+      setFilteredReports(reports)
+    } else if (filter === 'uploaded') {
+      setFilteredReports(reports.filter(r => !r.disease_type))
+    } else {
+      setFilteredReports(reports.filter(r => r.disease_type === filter))
+    }
+  }, [filter, reports])
+
   const loadReports = async () => {
     try {
-      const data = await getReports()
-      const reportsList = Array.isArray(data) ? data : (data.data || [])
-      setReports(reportsList)
+      const [predictionsResult, uploadsResult] = await Promise.allSettled([
+        getReports(),
+        getUploadedReports()
+      ])
+
+      let predictions = []
+      if (predictionsResult.status === 'fulfilled') {
+        const data = predictionsResult.value
+        predictions = Array.isArray(data) ? data : (data.data || [])
+      } else {
+        console.error('Failed to load predictions:', predictionsResult.reason)
+      }
+
+      let uploads = []
+      if (uploadsResult.status === 'fulfilled') {
+        const data = uploadsResult.value
+        uploads = Array.isArray(data) ? data : (data.data || [])
+      } else {
+        console.error('Failed to load uploads:', uploadsResult.reason)
+      }
+
+      const merged = [...predictions, ...uploads].sort((a, b) => 
+        new Date(b.created_at) - new Date(a.created_at)
+      )
+
+      setReports(merged)
     } catch (error) {
       console.error('Error loading reports:', error)
     }
@@ -124,18 +159,30 @@ const Reports = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-1">
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              <div className="p-4 border-b border-gray-100 bg-gray-50">
+              <div className="p-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
                 <h2 className="font-semibold text-gray-900">History</h2>
+                
+                <select 
+                  value={filter} 
+                  onChange={(e) => setFilter(e.target.value)}
+                  className="text-sm border-gray-300 rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
+                >
+                  <option value="all">All Reports</option>
+                  <option value="diabetes">Diabetes</option>
+                  <option value="heart">Heart</option>
+                  <option value="kidney">Kidney</option>
+                  <option value="uploaded">Uploaded</option>
+                </select>
               </div>
               
               <div className="max-h-[600px] overflow-y-auto">
-                {reports.length === 0 ? (
+                {filteredReports.length === 0 ? (
                   <div className="text-center py-12 px-6 text-gray-500">
                     <p>No reports found.</p>
                   </div>
                 ) : (
                   <div className="divide-y divide-gray-100">
-                    {reports.map((report) => (
+                    {filteredReports.map((report) => (
                       <div
                         key={report.id}
                         onClick={() => setSelectedReport(report)}
@@ -191,6 +238,15 @@ const Reports = () => {
                   </div>
                   <div className="flex gap-2">
                     <button
+                        onClick={() => window.print()}
+                        className="p-2 text-gray-600 hover:text-primary hover:bg-cyan-50 rounded-lg transition-colors"
+                        title="Print Report"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                        </svg>
+                    </button>
+                    <button
                         onClick={() => handleDelete(selectedReport.id)}
                         className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                         title="Delete Report"
@@ -241,9 +297,9 @@ const Reports = () => {
                       </div>
                       <h3 className="text-lg font-medium text-gray-900 mb-2">Document Uploaded</h3>
                       <p className="text-gray-500 mb-6">This is an uploaded medical report file.</p>
-                      {selectedReport.report_file && (
+                      {selectedReport.file_url && (
                          <a 
-                           href={selectedReport.report_file} 
+                           href={selectedReport.file_url} 
                            target="_blank" 
                            rel="noopener noreferrer"
                            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary-dark focus:outline-none"
