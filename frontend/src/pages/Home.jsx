@@ -27,7 +27,7 @@ const Home = () => {
     <div className="min-h-screen bg-white">
       <Navbar />
 
-      {/* Hero Section - simplified, no gradients */}
+
       <section className="py-20 px-4 bg-white">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-5xl md:text-6xl font-bold mb-4 text-gray-900">
