@@ -156,6 +156,92 @@ const Reports = () => {
               </div>
             </div>
           </div>
+
+
+
+          <div className="lg:col-span-2">
+            {selectedReport ? (
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div className="p-6 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-900">
+                      {selectedReport.disease_type 
+                        ? `${selectedReport.disease_type.charAt(0).toUpperCase() + selectedReport.disease_type.slice(1)} Analysis` 
+                        : 'Uploaded Document'}
+                    </h2>
+                    <p className="text-sm text-gray-500">
+                      Generated on {new Date(selectedReport.created_at).toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-8">
+                  {selectedReport.disease_type ? (
+                    <div className="space-y-6">
+                      <div className={`p-4 rounded-lg border ${
+                        selectedReport.prediction === 1 ? 'bg-red-50 border-red-100' : 'bg-green-50 border-green-100'
+                      }`}>
+                        <div className="flex items-center gap-3 mb-2">
+                          <span className={`text-lg font-bold ${
+                            selectedReport.prediction === 1 ? 'text-red-700' : 'text-green-700'
+                          }`}>
+                            {selectedReport.risk_category} Risk Detected
+                          </span>
+                        </div>
+                        <p className="text-gray-700">
+                          Probability: <strong>{(selectedReport.probability * 100).toFixed(1)}%</strong>
+                        </p>
+                      </div>
+
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-3">Input Parameters</h3>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                          {Object.entries(selectedReport.input_values || {}).map(([key, value]) => (
+                            <div key={key} className="bg-gray-50 p-3 rounded">
+                              <span className="text-gray-500 block text-xs uppercase">{key}</span>
+                              <span className="font-medium text-gray-900">{value}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-center py-12">
+                      <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">Document Uploaded</h3>
+                      <p className="text-gray-500 mb-6">This is an uploaded medical report file.</p>
+                      {selectedReport.report_file && (
+                         <a 
+                           href={selectedReport.report_file} 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary-dark focus:outline-none"
+                         >
+                           View Document
+                         </a>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center h-full flex flex-col items-center justify-center min-h-[400px]">
+                <div className="w-20 h-20 bg-cyan-50 rounded-full flex items-center justify-center mb-6">
+                  <svg className="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Select a Report</h3>
+                <p className="text-gray-500 max-w-sm">
+                  Choose a report from the history sidebar to view details.
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
