@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 
-// Import Routes
+
 import authRoutes from './authRoutes.js'; 
 import predictRoutes from './routes/predict.js';
 import reportRoutes from './routes/reports.js';
@@ -12,28 +12,27 @@ dotenv.config();
 
 const app = express();
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Logging Middleware
+
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
   next();
 });
 
-// Routes
+
 app.get('/', (req, res) => {
   res.send('ArogyaAI Backend API is running...');
 });
 
-// API Routes
+
 app.use('/api/auth', authRoutes); 
 app.use('/api/predict', predictRoutes);
 app.use('/api/reports', reportRoutes);
-app.use('/api', uploadRoutes); // /api/upload-report
+app.use('/api', uploadRoutes); 
 
-// Error Handling Middleware
+
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Something went wrong!' });

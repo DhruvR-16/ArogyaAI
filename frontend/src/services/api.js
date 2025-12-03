@@ -8,7 +8,7 @@ const api = axios.create({
   },
 });
 
-// Request interceptor to add token
+
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -20,7 +20,7 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response interceptor to handle errors
+
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -33,5 +33,11 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+
+export const predictDisease = async (disease, data) => {
+  const response = await api.post(`/api/predict?disease=${disease}`, data);
+  return response.data;
+};
 
 export default api;

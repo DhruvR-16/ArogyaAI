@@ -1,0 +1,1 @@
+{"features": ["Age", "RestingBP", "Cholesterol", "FastingBS", "MaxHR", "Oldpeak"], "target_classes": ["Normal", "Heart Disease"]}

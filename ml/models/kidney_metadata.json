@@ -1,0 +1,1 @@
+{"features": ["age", "bp", "bgr", "bu", "sc", "hemo", "pcv", "wc", "rc"], "target_classes": ["Not CKD", "CKD"]}
