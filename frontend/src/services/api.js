@@ -57,4 +57,9 @@ export const getReports = async () => {
   return response.data;
 };
 
+export const deleteReport = async (id) => {
+  const response = await api.delete(`/api/reports/${id}`);
+  return response.data;
+};
+
 export default api;
