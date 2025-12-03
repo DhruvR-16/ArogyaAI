@@ -35,8 +35,25 @@ api.interceptors.response.use(
 );
 
 
+
 export const predictDisease = async (disease, data) => {
   const response = await api.post(`/api/predict?disease=${disease}`, data);
+  return response.data;
+};
+
+export const uploadReport = async (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  const response = await api.post('/api/upload-report', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response.data;
+};
+
+export const getReports = async () => {
+  const response = await api.get('/api/reports');
   return response.data;
 };
 
