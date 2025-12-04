@@ -8,14 +8,15 @@ const Reports = () => {
   const navigate = useNavigate()
   const { isAuthenticated } = useAuth()
   const [reports, setReports] = useState([])
-  const [filteredReports, setFilteredReports] = useState([])
   const [selectedReport, setSelectedReport] = useState(null)
   const [uploading, setUploading] = useState(false)
   const [uploadStatus, setUploadStatus] = useState('')
   const [filter, setFilter] = useState('all')
+  const [searchQuery, setSearchQuery] = useState('')
   const [notes, setNotes] = useState('')
   const [isEditingNotes, setIsEditingNotes] = useState(false)
   const [updatingNotes, setUpdatingNotes] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -25,46 +26,36 @@ const Reports = () => {
     }
   }, [isAuthenticated, navigate])
 
-  useEffect(() => {
-    if (filter === 'all') {
-      setFilteredReports(reports)
-    } else if (filter === 'uploaded') {
-      setFilteredReports(reports.filter(r => !r.disease_type))
-    } else {
-      setFilteredReports(reports.filter(r => r.disease_type === filter))
-    }
-  }, [filter, reports])
-
   const loadReports = async () => {
+    setLoading(true)
     try {
-      const [predictionsResult, uploadsResult] = await Promise.allSettled([
+      const [reportsResult, uploadsResult] = await Promise.allSettled([
         getReports(),
         getUploadedReports()
-      ])
+      ]);
 
-      let predictions = []
-      if (predictionsResult.status === 'fulfilled') {
-        const data = predictionsResult.value
-        predictions = Array.isArray(data) ? data : (data.data || [])
-      } else {
-        console.error('Failed to load predictions:', predictionsResult.reason)
+      let allReports = [];
+
+      if (reportsResult.status === 'fulfilled') {
+        const data = reportsResult.value;
+        const reportsList = Array.isArray(data) ? data : (data.data || []);
+        allReports = [...allReports, ...reportsList];
       }
 
-      let uploads = []
       if (uploadsResult.status === 'fulfilled') {
-        const data = uploadsResult.value
-        uploads = Array.isArray(data) ? data : (data.data || [])
-      } else {
-        console.error('Failed to load uploads:', uploadsResult.reason)
+        allReports = [...allReports, ...uploadsResult.value];
       }
 
-      const merged = [...predictions, ...uploads].sort((a, b) => 
-        new Date(b.created_at) - new Date(a.created_at)
-      )
-
-      setReports(merged)
+      allReports.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      
+      setReports(allReports)
+      if (allReports.length > 0) {
+        setSelectedReport(allReports[0])
+      }
     } catch (error) {
       console.error('Error loading reports:', error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -131,6 +122,19 @@ const Reports = () => {
     }
   }
 
+  const filteredReports = reports.filter(report => {
+    const matchesFilter = filter === 'all' || 
+      (filter === 'uploaded' && !report.disease_type) ||
+      (report.disease_type === filter);
+
+    const matchesSearch = searchQuery === '' || 
+      report.id.toString().includes(searchQuery) ||
+      (report.disease_type && report.disease_type.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (report.notes && report.notes.toLowerCase().includes(searchQuery.toLowerCase()));
+
+    return matchesFilter && matchesSearch;
+  });
+
   if (!isAuthenticated) return null
 
   return (
@@ -184,20 +188,35 @@ const Reports = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-1">
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-              <div className="p-4 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
-                <h2 className="font-semibold text-gray-900">History</h2>
-                
-                <select 
-                  value={filter} 
-                  onChange={(e) => setFilter(e.target.value)}
-                  className="text-sm border-gray-300 rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
-                >
-                  <option value="all">All Reports</option>
-                  <option value="diabetes">Diabetes</option>
-                  <option value="heart">Heart</option>
-                  <option value="kidney">Kidney</option>
-                  <option value="uploaded">Uploaded</option>
-                </select>
+              <div className="p-4 border-b border-gray-100 bg-gray-50 flex flex-col gap-4">
+                <div className="flex justify-between items-center">
+                  <h2 className="font-semibold text-gray-900">History</h2>
+                  
+                  <select 
+                    value={filter} 
+                    onChange={(e) => setFilter(e.target.value)}
+                    className="text-sm border-gray-300 rounded-md shadow-sm focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50"
+                  >
+                    <option value="all">All Reports</option>
+                    <option value="diabetes">Diabetes</option>
+                    <option value="heart">Heart</option>
+                    <option value="kidney">Kidney</option>
+                    <option value="uploaded">Uploaded</option>
+                  </select>
+                </div>
+
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search reports..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-primary focus:border-primary"
+                  />
+                  <svg className="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
               </div>
               
               <div className="max-h-[600px] overflow-y-auto">
