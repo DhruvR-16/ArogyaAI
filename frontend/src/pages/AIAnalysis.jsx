@@ -15,20 +15,18 @@ const AIAnalysis = () => {
           </p>
         </div>
 
-        <div className="relative bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden min-h-[400px] flex flex-col items-center justify-center p-8">
+        <div className="relative bg-white rounded-xl shadow-sm border border-blue-200 overflow-hidden min-h-[400px] flex flex-col items-center justify-center p-8">
           
 
           <div className="absolute inset-0 bg-white/60 backdrop-blur-sm flex flex-col items-center justify-center">
             <div className="bg-primary text-white px-6 py-2 rounded-full text-lg font-bold shadow-lg  mb-4">
-              Coming Soon
+              Training Model…
             </div>
             <p className="text-gray-600 font-medium text-center max-w-md">
                Training our advanced models to analyze medical imagery with high precision. Stay tuned!
             </p>
           </div>
 
-
-    
 
         </div>
 

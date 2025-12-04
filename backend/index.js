@@ -8,6 +8,7 @@ import predictRoutes from './routes/predict.js';
 import reportRoutes from './routes/reports.js';
 import uploadRoutes from './routes/upload.js';
 import profileRoutes from './routes/profile.js';
+import medicationRoutes from './routes/medication.js';
 
 dotenv.config();
 
@@ -32,6 +33,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/predict', predictRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/profile', profileRoutes);
+app.use('/api/medications', medicationRoutes);
 app.use('/api', uploadRoutes); 
 
 

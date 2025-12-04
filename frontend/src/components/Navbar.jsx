@@ -69,8 +69,9 @@ const Navbar = () => {
                 <div className="flex items-center gap-2">
                   <NavLink to="/">Home</NavLink>
                   <NavLink to="/analysis">Analysis</NavLink>
-                  <NavLink to="/ai-analysis">AI Analysis</NavLink>
                   <NavLink to="/reports">Reports</NavLink>
+                  <NavLink to="/medications">Medications</NavLink>
+                  <NavLink to="/ai-analysis">AI Analysis</NavLink>
                 </div>
               )}
             </div>
@@ -121,7 +122,7 @@ const Navbar = () => {
                         </button>
                         <button
                           onClick={handleLogout}
-                          className="w-full text-left px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                          className="w-full text-left px-3 py-2 text-gray-700 hover:bg-red-50 rounded-lg transition-colors"
                         >
                           Logout
                         </button>

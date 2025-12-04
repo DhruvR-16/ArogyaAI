@@ -5,6 +5,7 @@ import Analysis from './pages/Analysis'
 import AIAnalysis from './pages/AIAnalysis'
 import Reports from './pages/Reports'
 import Profile from './pages/Profile'
+import Medications from './pages/Medications'
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path="/analysis" element={<Analysis />} />
           <Route path="/ai-analysis" element={<AIAnalysis />} />
           <Route path="/reports" element={<Reports />} />
+          <Route path="/medications" element={<Medications />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
       </Router>

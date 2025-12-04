@@ -77,6 +77,31 @@ export const getProfile = async () => {
   return response.data;
 };
 
+export const googleLogin = async (code) => {
+  const response = await api.post('/api/auth/google/login', { code });
+  return response.data;
+};
+
+export const getMedications = async () => {
+  const response = await api.get('/api/medications');
+  return response.data;
+};
+
+export const addMedication = async (data) => {
+  const response = await api.post('/api/medications', data);
+  return response.data;
+};
+
+export const updateMedication = async (id, data) => {
+  const response = await api.put(`/api/medications/${id}`, data);
+  return response.data;
+};
+
+export const deleteMedication = async (id) => {
+  const response = await api.delete(`/api/medications/${id}`);
+  return response.data;
+};
+
 export const updateProfile = async (data) => {
   const response = await api.put('/api/profile', data);
   return response.data;
