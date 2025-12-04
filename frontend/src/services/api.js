@@ -72,4 +72,21 @@ export const getUploadedReports = async () => {
   return response.data;
 };
 
+export const getProfile = async () => {
+  const response = await api.get('/api/profile');
+  return response.data;
+};
+
+export const updateProfile = async (data) => {
+  const response = await api.put('/api/profile', data);
+  return response.data;
+};
+
+export const deleteProfile = async (action = 'clear_profile') => {
+  const response = await api.delete(`/api/profile?action=${action}`);
+  return response.data;
+};
+
+
+
 export default api;
