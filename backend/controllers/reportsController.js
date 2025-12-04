@@ -72,3 +72,42 @@ export const deleteReport = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const updateReport = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { notes } = req.body;
+    let { data, error } = await supabase
+      .from('reports')
+      .update({ notes })
+      .eq('id', id)
+      .eq('user_id', req.user.id)
+      .select();
+
+    if (error) throw error;
+
+    if (data.length === 0) {
+      const result = await supabase
+        .from('uploaded_reports')
+        .update({ notes })
+        .eq('id', id)
+        .eq('user_id', req.user.id)
+        .select();
+      
+      data = result.data;
+      error = result.error;
+      
+      if (error) throw error;
+    }
+
+    if (data.length === 0) {
+      return res.status(404).json({ error: 'Report not found or not authorized' });
+    }
+
+    res.status(200).json({ message: 'Report updated successfully', data: data[0] });
+
+  } catch (error) {
+    console.error('Update Report Error:', error);
+    res.status(500).json({ error: error.message });
+  }
+};

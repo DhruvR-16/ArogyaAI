@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
 import { useEffect, useState } from 'react'
-import { getReports, uploadReport, deleteReport, getUploadedReports } from '../services/api'
+import { getReports, uploadReport, deleteReport, getUploadedReports, updateReport } from '../services/api'
 
 const Reports = () => {
   const navigate = useNavigate()
@@ -13,6 +13,9 @@ const Reports = () => {
   const [uploading, setUploading] = useState(false)
   const [uploadStatus, setUploadStatus] = useState('')
   const [filter, setFilter] = useState('all')
+  const [notes, setNotes] = useState('')
+  const [isEditingNotes, setIsEditingNotes] = useState(false)
+  const [updatingNotes, setUpdatingNotes] = useState(false)
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -106,6 +109,28 @@ const Reports = () => {
     }
   }
 
+  const handleUpdateNotes = async () => {
+    if (!selectedReport) return
+    
+    setUpdatingNotes(true)
+    try {
+      const updatedReport = await updateReport(selectedReport.id, { notes })
+      
+      setSelectedReport({ ...selectedReport, notes: updatedReport.data.notes })
+      
+      setReports(reports.map(r => 
+        r.id === selectedReport.id ? { ...r, notes: updatedReport.data.notes } : r
+      ))
+      
+      setIsEditingNotes(false)
+    } catch (error) {
+      console.error('Update notes error:', error)
+      alert('Failed to update notes. Please try again.')
+    } finally {
+      setUpdatingNotes(false)
+    }
+  }
+
   if (!isAuthenticated) return null
 
   return (
@@ -185,7 +210,11 @@ const Reports = () => {
                     {filteredReports.map((report) => (
                       <div
                         key={report.id}
-                        onClick={() => setSelectedReport(report)}
+                        onClick={() => {
+                          setSelectedReport(report)
+                          setNotes(report.notes || '')
+                          setIsEditingNotes(false)
+                        }}
                         className={`p-4 cursor-pointer transition-colors hover:bg-gray-50 ${
                           selectedReport?.id === report.id
                             ? 'bg-cyan-50 border-l-4 border-primary'
@@ -238,15 +267,6 @@ const Reports = () => {
                   </div>
                   <div className="flex gap-2">
                     <button
-                        onClick={() => window.print()}
-                        className="p-2 text-gray-600 hover:text-primary hover:bg-cyan-50 rounded-lg transition-colors"
-                        title="Print Report"
-                      >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                        </svg>
-                    </button>
-                    <button
                         onClick={() => handleDelete(selectedReport.id)}
                         className="p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                         title="Delete Report"
@@ -259,6 +279,60 @@ const Reports = () => {
                 </div>
 
                 <div className="p-8">
+                  <div className="mb-8 bg-yellow-50 p-4 rounded-lg border border-yellow-100">
+                    <div className="flex justify-between items-center mb-2">
+                      <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+                        <svg className="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Notes
+                      </h3>
+                      {!isEditingNotes && (
+                        <button 
+                          onClick={() => setIsEditingNotes(true)}
+                          className="text-sm text-primary hover:text-primary-dark font-medium"
+                        >
+                          Edit
+                        </button>
+                      )}
+                    </div>
+                    
+                    {isEditingNotes ? (
+                      <div>
+                        <textarea
+                          value={notes}
+                          onChange={(e) => setNotes(e.target.value)}
+                          className="w-full p-2 border border-gray-300 rounded-md focus:ring-primary focus:border-primary text-sm"
+                          rows="3"
+                          placeholder="Add your notes here..."
+                        />
+                        <div className="flex justify-end gap-2 mt-2">
+                          <button
+                            onClick={() => {
+                              setIsEditingNotes(false)
+                              setNotes(selectedReport.notes || '')
+                            }}
+                            className="px-3 py-1 text-sm text-gray-600 hover:text-gray-800"
+                            disabled={updatingNotes}
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            onClick={handleUpdateNotes}
+                            className="px-3 py-1 text-sm bg-primary text-white rounded hover:bg-primary-dark disabled:opacity-50"
+                            disabled={updatingNotes}
+                          >
+                            {updatingNotes ? 'Saving...' : 'Save'}
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-sm text-gray-700 whitespace-pre-wrap">
+                        {selectedReport.notes || <span className="text-gray-400 italic">No notes added.</span>}
+                      </p>
+                    )}
+                  </div>
+
                   {selectedReport.disease_type ? (
                     <div className="space-y-6">
                       <div className={`p-4 rounded-lg border ${

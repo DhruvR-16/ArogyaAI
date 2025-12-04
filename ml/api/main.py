@@ -4,14 +4,14 @@ from datetime import datetime
 import os
 import sys
 
-# Add project root to path
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from inference.predict import predictor
 
 app = FastAPI(title="ArogyaAI Disease Prediction API", version="1.0.0")
 
-# Input Schemas
+
 class DiabetesInput(BaseModel):
     Pregnancies: int
     Glucose: int
@@ -41,7 +41,7 @@ class KidneyInput(BaseModel):
     wc: float
     rc: float
 
-# Response Schema
+
 class PredictionResponse(BaseModel):
     prediction: int
     probability: float

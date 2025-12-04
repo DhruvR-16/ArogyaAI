@@ -62,6 +62,11 @@ export const deleteReport = async (id) => {
   return response.data;
 };
 
+export const updateReport = async (id, data) => {
+  const response = await api.put(`/api/reports/${id}`, data);
+  return response.data;
+};
+
 export const getUploadedReports = async () => {
   const response = await api.get('/api/uploaded-reports');
   return response.data;

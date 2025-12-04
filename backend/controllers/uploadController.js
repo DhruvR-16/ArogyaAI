@@ -11,6 +11,8 @@ export const uploadReport = async (req, res) => {
     const fileName = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
     const filePath = `${req.user.id}/${fileName}`;
 
+    console.log('File received:', file.originalname, file.mimetype);
+
     const { data: storageData, error: storageError } = await supabase.storage
       .from('reports')
       .upload(filePath, file.buffer, {
@@ -18,6 +20,7 @@ export const uploadReport = async (req, res) => {
       });
 
     if (storageError) {
+      console.error('Supabase Storage Error:', storageError);
       throw storageError;
     }
 
@@ -26,6 +29,7 @@ export const uploadReport = async (req, res) => {
       .getPublicUrl(filePath);
 
     const fileUrl = publicUrlData.publicUrl;
+    console.log('File uploaded to storage, URL:', fileUrl);
 
     const { data: dbData, error: dbError } = await supabase
       .from('uploaded_reports')
@@ -39,6 +43,7 @@ export const uploadReport = async (req, res) => {
       .single();
 
     if (dbError) {
+      console.error('Supabase DB Insert Error:', dbError);
       throw dbError;
     }
 
@@ -48,8 +53,8 @@ export const uploadReport = async (req, res) => {
       record: dbData,
     });
   } catch (error) {
-    console.error('Upload Error:', error);
-    res.status(500).json({ error: error.message });
+    console.error('Upload Controller Error:', error);
+    res.status(500).json({ error: error.message, details: error });
   }
 };
 
