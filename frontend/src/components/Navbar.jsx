@@ -69,6 +69,7 @@ const Navbar = () => {
                 <div className="flex items-center gap-2">
                   <NavLink to="/">Home</NavLink>
                   <NavLink to="/analysis">Analysis</NavLink>
+                  <NavLink to="/ai-analysis">AI Analysis</NavLink>
                   <NavLink to="/reports">Reports</NavLink>
                 </div>
               )}
